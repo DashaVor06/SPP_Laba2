@@ -4,10 +4,8 @@ import path from 'path';
 import { config } from './config/index.js';
 import { requestLogger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { apiRateLimiter } from './middleware/rateLimiter.js';
 import { NotFoundError } from './errors/appErrors.js';
 
-import authRoutes from './routes/authRoutes.js';
 import carrierRoutes from './routes/carrierRoutes.js';
 import busRoutes from './routes/busRoutes.js';
 import tripRoutes from './routes/tripRoutes.js';
@@ -36,9 +34,6 @@ app.use('/uploads', express.static(config.uploadDir));
 // Structured logging for every incoming request
 app.use(requestLogger);
 
-// Global API rate limiting (Lab 3 requirement)
-app.use('/api', apiRateLimiter);
-
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -50,7 +45,6 @@ app.get('/api/health', (req, res) => {
 });
 
 // REST API route modules
-app.use('/api/auth', authRoutes);
 app.use('/api/carriers', carrierRoutes);
 app.use('/api/buses', busRoutes);
 app.use('/api/trips', tripRoutes);

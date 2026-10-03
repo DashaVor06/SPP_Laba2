@@ -74,25 +74,6 @@ export async function initializeDatabase() {
       CONSTRAINT unique_trip_seat UNIQUE (trip_id, seat_number)
     );
 
-    CREATE TABLE IF NOT EXISTS refresh_tokens (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      token TEXT NOT NULL UNIQUE,
-      expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS audit_logs (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-      action VARCHAR(100) NOT NULL,
-      entity VARCHAR(100) NOT NULL,
-      entity_id INTEGER,
-      details JSONB,
-      ip_address VARCHAR(100),
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
-
     CREATE INDEX IF NOT EXISTS idx_trips_search ON trips(origin_city, destination_city, departure_time);
     CREATE INDEX IF NOT EXISTS idx_bookings_trip ON bookings(trip_id);
     CREATE INDEX IF NOT EXISTS idx_buses_carrier ON buses(carrier_id);

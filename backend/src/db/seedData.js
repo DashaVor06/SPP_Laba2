@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { query } from './db.js';
 import { logger } from '../utils/logger.js';
-import { ROLES } from '../middleware/auth.js';
 
 export async function seedDatabase() {
   logger.info('Seeding initial data...');
@@ -12,14 +11,14 @@ export async function seedDatabase() {
   const usersRes = await query(`
     INSERT INTO users (email, password_hash, name, phone, role)
     VALUES 
-      ('admin@bus.by', $1, 'Администратор Системы', '+375 (29) 000-00-01', '${ROLES.ADMIN}'),
-      ('carrier@atlas.by', $1, 'Диспетчер Атлас', '+375 (29) 111-22-33', '${ROLES.CARRIER}'),
-      ('passenger@example.com', $1, 'Иван Иванов', '+375 (29) 123-45-67', '${ROLES.PASSENGER}')
+      ('admin@bus.by', $1, 'Администратор Системы', '+375 (29) 000-00-01', 'ADMIN'),
+      ('carrier@atlas.by', $1, 'Диспетчер Атлас', '+375 (29) 111-22-33', 'CARRIER'),
+      ('passenger@example.com', $1, 'Иван Иванов', '+375 (29) 123-45-67', 'PASSENGER')
     RETURNING id, email, role;
   `, [passwordHash]);
 
-  const carrierUserId = usersRes.rows.find(u => u.role === ROLES.CARRIER).id;
-  const passengerUserId = usersRes.rows.find(u => u.role === ROLES.PASSENGER).id;
+  const carrierUserId = usersRes.rows.find(u => u.role === 'CARRIER').id;
+  const passengerUserId = usersRes.rows.find(u => u.role === 'PASSENGER').id;
 
   // 2. Insert Carriers
   const carriersRes = await query(`

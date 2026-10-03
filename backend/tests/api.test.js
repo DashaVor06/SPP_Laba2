@@ -159,14 +159,16 @@ describe('Bus Aggregator REST API Tests', () => {
     assert.ok(res.body.data.length > 0);
   });
 
-  it('POST /api/auth/login - should authenticate user and return temporary JWT tokens', async () => {
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'passenger@example.com', password: 'password123' });
-
+  it('DELETE /api/trips/:id - should delete trip (CRUD: Delete)', async () => {
+    const res = await request(app).delete(`/api/trips/${createdTripId}`);
     assert.equal(res.statusCode, 200);
-    assert.ok(res.body.data.accessToken);
-    assert.ok(res.body.data.refreshToken);
-    assert.equal(res.body.data.user.email, 'passenger@example.com');
+    assert.equal(res.body.success, true);
+    createdTripId = null; // Mark cleaned up
+  });
+
+  it('GET /api/trips/999999 - should return 404 Not Found for non-existing trip', async () => {
+    const res = await request(app).get('/api/trips/999999');
+    assert.equal(res.statusCode, 404);
+    assert.equal(res.body.success, false);
   });
 });

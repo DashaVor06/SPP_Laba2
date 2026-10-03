@@ -10,7 +10,6 @@ import {
 } from '../controllers/carrierController.js';
 import { validate } from '../middleware/validate.js';
 import { upload } from '../middleware/upload.js';
-import { authenticate, requireRole, ROLES } from '../middleware/auth.js';
 
 const router = express.Router();
 
